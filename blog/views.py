@@ -4,7 +4,7 @@ from django.views.generic import ListView, DetailView
 
 
 # Create your views here.
-from blog.models import Post, Category
+from blog.models import Post, Category, Tag
 
 
 class PostList(ListView):
@@ -42,6 +42,19 @@ def category_page(request, slug):
                       'categories' : Category.objects.all(),
                       'no_category_post_count' : Post.objects.filter(category=None).count(),
                       'category' : category
+                  }
+                  )
+
+def tag_page(request, slug):
+    tag = Tag.objects.get(slug=slug)
+    post_list = tag.post_set.all() #Post.objects.filter(tags=tag)
+
+    return render(request, 'blog/post_list.html',
+                  {
+                      'post_list' : post_list,
+                      'categories' : Category.objects.all(),
+                      'no_category_post_count' : Post.objects.filter(category=None).count(),
+                      'tag' : tag
                   }
                   )
 
